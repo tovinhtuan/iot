@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+
+<h1 id="demo"></h1>
+
+<script>
+setInterval(myTimer, 4000);
+
+function myTimer() {
+//   const date = new Date();
+//   document.getElementById("demo").innerHTML = date.toLocaleTimeString();
+  var x = '<table class= "iot"><tbody><tr><td class="header" colspan="6">IOT 2021</td></tr>' + 
+     '<tr class="mainRow"><td>Flight</td><td>Temperature</td><td>Humidity</td><td>Date</td></tr>'  + 
+        '<tr class="data"><td>{{.flight}}</td><td>{{.temperature}}</td><td>{{.humidity}}</td><td>{{.date}}</td></tr></table>' +
+        '<button onclick="myFunction()">Click me</button>';
+                 
+  document.getElementById("demo").innerHTML = x;
+
+}
+</script>
+</body>
+</html>

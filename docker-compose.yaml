@@ -1,0 +1,48 @@
+version: "3"
+
+networks: 
+  go-micro:
+    driver: bridge
+
+volumes: 
+  postgresql:
+    driver: local
+  pgadmin:
+    driver: local
+
+services: 
+  # PostgreSQL Database
+  postgresql:
+    container_name: postgresql1
+    image: postgres:10-alpine
+    environment: 
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: tuan
+      PGDATA: /data/postgresql1
+    volumes: 
+      - postgresql:/data/postgresql1
+    ports: 
+      - "5432:5433"
+    networks: 
+      - go-micro
+    restart: unless-stopped
+  
+  #PostgreSQL Admin
+  pgadmin:
+    container_name: pgadmin1
+    image: dpage/pgadmin4:5
+    depends_on: 
+      - postgresql 
+    environment: 
+      PGADMIN_DEFAULT_EMAIL: admin@example.com 
+      PGADMIN_DEFAULT_PASSWORD: admin 
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes: 
+      - pgadmin:/root/.pgadmin
+    ports: 
+      - "5051:80"
+    networks: 
+      - go-micro 
+    links:
+      - postgresql1
+    restart: unless-stopped
