@@ -4,7 +4,11 @@
 
 
 <h1 id="demo"></h1>
-
+<style>
+  table, th, td {
+    border: 1px solid;
+  }
+</style>
 <script>
 setInterval(myTimer, 4000);
 
@@ -14,7 +18,7 @@ function myTimer() {
   var x = '<table class= "iot"><tbody><tr><td class="header" colspan="6">IOT 2021</td></tr>' + 
      '<tr class="mainRow"><td>Flight</td><td>Temperature</td><td>Humidity</td><td>Date</td></tr>'  + 
         '<tr class="data"><td>{{.flight}}</td><td>{{.temperature}}</td><td>{{.humidity}}</td><td>{{.date}}</td></tr></table>' +
-        '<button onclick="myFunction()">Click me</button>';
+        '<button onclick="myFunction()">Turn On/Turn Off</button>';
                  
   document.getElementById("demo").innerHTML = x;
 

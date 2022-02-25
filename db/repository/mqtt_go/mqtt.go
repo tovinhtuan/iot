@@ -28,7 +28,8 @@ var connectLostHandler mqtt.ConnectionLostHandler = func(client mqtt.Client, err
 	fmt.Printf("Connect lost: %v", err)
 }
 var (
-	broker = "broker.emqx.io"
+	// broker = "mqtt://broker.emqx.io"
+	broker = "broker.mqttdashboard.com"
 	port   = 1883
 	// username = "emqx"
 	username = "totuan"
@@ -36,7 +37,7 @@ var (
 	clientId = "go_mqtt_client_iot"
 	password = "public"
 	// password = "110298"
-	topic = "test100"
+	topic = "test10"
 )
 
 func ConnectMQTTBroker(opts *mqtt.ClientOptions) (*mqtt.Client, error) {
@@ -72,6 +73,9 @@ var messagePubHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Me
 		log.Fatal(err)
 		os.Exit(1)
 	}
+	local, _ := time.LoadLocation("Asia/Ho_Chi_Minh")
+	t, _ := time.Parse("2006-01-02 15:04:05", time.Now().In(local).Format("2006-01-02 15:04:05"))
+	NewData.CreatedAt = t
 	SensorData = NewData
 	// t, _ := time.Parse("2006-01-02 15:04:05", NewData.CreatedAt.Format("2006-01-02 15:04:05"))
 	dataDB := model.Sensor{
@@ -93,9 +97,7 @@ func Sub(client mqtt.Client) {
 }
 func Publish(c *cron.Cron, client mqtt.Client) {
 	test := make(chan int)
-	local, _ := time.LoadLocation("Asia/Ho_Chi_Minh")
 	c.AddFunc("@every 0h0m4s", func() {
-		t, _ := time.Parse("2006-01-02 15:04:05", time.Now().In(local).Format("2006-01-02 15:04:05"))
 		num := 1
 		for i := 0; i < num; i++ {
 			temperature := fmt.Sprintf("%.2f", -10.0+rand.Float64()*(100.0-(-10.0)))
@@ -106,13 +108,13 @@ func Publish(c *cron.Cron, client mqtt.Client) {
 				Flight:      false,
 				Temperature: temfl,
 				Humidity:    humfl,
-				CreatedAt:   t,
 			}
 			messageJSON, err := json.Marshal(sensor)
 			if err != nil {
 				log.Printf("Error marshal sensor:%v\n", err)
 				os.Exit(1)
 			}
+			fmt.Println(sensor)
 			token := client.Publish(topic, 0, false, messageJSON)
 			token.Wait()
 			time.Sleep(time.Second * 10)
